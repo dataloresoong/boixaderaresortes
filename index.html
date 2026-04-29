@@ -613,78 +613,70 @@ Menu
 	</div><!-- #page -->
 
 <script>
-// Page Search Functionality
+// Page Search Functionality - Optimized Version
 (function() {
 	const searchInput = document.getElementById('search-input-field');
 	const clearBtn = document.getElementById('clear-search-btn');
 	const contentArea = document.getElementById('content') || document.body;
 	let highlightedElements = [];
+	let debounceTimer = null;
+	let originalHTML = '';
+
+	// Store original HTML on load
+	if (!originalHTML) {
+		originalHTML = contentArea.innerHTML;
+	}
 
 	// Remove previous highlights
 	function clearHighlights() {
-		highlightedElements.forEach(element => {
-			const parent = element.parentNode;
-			while (element.firstChild) {
-				parent.insertBefore(element.firstChild, element);
-			}
-			parent.removeChild(element);
-		});
+		contentArea.innerHTML = originalHTML;
 		highlightedElements = [];
 	}
 
-	// Highlight search term in text nodes
+	// Highlight search term
 	function highlightMatches(searchTerm) {
-		clearHighlights();
-		
 		if (!searchTerm.trim()) {
+			clearHighlights();
 			clearBtn.style.display = 'none';
 			return;
 		}
 
-		clearBtn.style.display = 'inline-block';
-		const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-		let matchCount = 0;
-
-		function walk(node) {
-			if (node.nodeType === 3) { // Text node
-				if (regex.test(node.nodeValue)) {
-					regex.lastIndex = 0;
-					const span = document.createElement('span');
-					const fragment = document.createDocumentFragment();
-					let lastIndex = 0;
-
-					node.nodeValue.replace(regex, (match, p1, offset) => {
-						fragment.appendChild(document.createTextNode(node.nodeValue.substring(lastIndex, offset)));
-						const highlight = document.createElement('span');
-						highlight.className = 'search-highlight';
-						highlight.textContent = match;
-						fragment.appendChild(highlight);
-						highlightedElements.push(highlight);
-						matchCount++;
-						lastIndex = offset + match.length;
-					});
-
-					fragment.appendChild(document.createTextNode(node.nodeValue.substring(lastIndex)));
-					node.parentNode.replaceChild(fragment, node);
-				}
-			} else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
-				for (let i = 0; i < node.childNodes.length; i++) {
-					walk(node.childNodes[i]);
-				}
-			}
-		}
-
-		walk(contentArea);
+		// Restore original HTML first
+		contentArea.innerHTML = originalHTML;
 		
-		// Show match count in console (optional)
+		clearBtn.style.display = 'inline-block';
+		const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const regex = new RegExp(escapedTerm, 'gi');
+
+		// Simple innerHTML replace with HTML escaping
+		let html = originalHTML;
+		let matchCount = 0;
+		
+		html = html.replace(regex, (match) => {
+			matchCount++;
+			return `<span class="search-highlight">${match}</span>`;
+		});
+
+		contentArea.innerHTML = html;
+		
 		if (matchCount > 0) {
 			console.log(`Se encontraron ${matchCount} coincidencia${matchCount !== 1 ? 's' : ''}`);
 		}
 	}
 
+	// Debounced search
+	function debouncedSearch(searchTerm) {
+		if (debounceTimer) {
+			clearTimeout(debounceTimer);
+		}
+		debounceTimer = setTimeout(() => {
+			highlightMatches(searchTerm);
+		}, 200);
+	}
+
 	// Event listeners
 	searchInput.addEventListener('input', function() {
-		highlightMatches(this.value);
+		debouncedSearch(this.value);
 	});
 
 	clearBtn.addEventListener('click', function(e) {
@@ -692,6 +684,9 @@ Menu
 		searchInput.value = '';
 		clearHighlights();
 		clearBtn.style.display = 'none';
+		if (debounceTimer) {
+			clearTimeout(debounceTimer);
+		}
 		searchInput.focus();
 	});
 
