@@ -165,25 +165,6 @@ Menu
 .feature-product-section .tg-feature-product-widget .featured-image-desc span a {
 	 color: #fff !important;
 }
-/*---------------------------------------------Page Search-------------*/
-.search-highlight {
-	background-color: #FCD667;
-	padding: 2px 4px;
-	border-radius: 2px;
-	font-weight: bold;
-}
-#clear-search-btn {
-	cursor: pointer;
-	background: none;
-	border: none;
-	color: #666;
-	padding: 0 5px;
-	font-size: 18px;
-	transition: color 0.3s ease;
-}
-#clear-search-btn:hover {
-	color: #FCD667;
-}
 		</style>
 		<style id="kirki-inline-styles">body{font-family:Montserrat;font-weight:400;}/* cyrillic-ext */
 @font-face {
@@ -387,21 +368,7 @@ Menu
 
 				<div class="header-action-container">
 					
-										<div class="search-wrap">
-						<div class="search-icon">
-							<i class="fa fa-search"></i>
-						</div>
-						<div class="search-box">
-							
-<form role="search" class="searchform" id="page-search-form" onsubmit="return false;">
-	<label>
-		<span class="screen-reader-text">Buscar:</span>
-		<input type="search" class="search-field" id="search-input-field" placeholder="Buscar..." value="" aria-label="Buscar en la página" />
-	</label>
-	<button type="button" class="search-submit btn search-btn" id="clear-search-btn" style="display:none;"><span class="screen-reader-text">Limpiar búsqueda</span><i class="fa fa-times"></i></button>
-</form>
-						</div>
-					</div>
+
 									</div>
 			</div>
 		</div>
@@ -612,90 +579,6 @@ Menu
 		<a href="#masthead" id="scroll-up"><i class="fa fa-chevron-up"></i></a>
 	</div><!-- #page -->
 
-<script>
-// Page Search Functionality - Optimized Version
-(function() {
-	const searchInput = document.getElementById('search-input-field');
-	const clearBtn = document.getElementById('clear-search-btn');
-	const contentArea = document.getElementById('content') || document.body;
-	let highlightedElements = [];
-	let debounceTimer = null;
-	let originalHTML = '';
-
-	// Store original HTML on load
-	if (!originalHTML) {
-		originalHTML = contentArea.innerHTML;
-	}
-
-	// Remove previous highlights
-	function clearHighlights() {
-		contentArea.innerHTML = originalHTML;
-		highlightedElements = [];
-	}
-
-	// Highlight search term
-	function highlightMatches(searchTerm) {
-		if (!searchTerm.trim()) {
-			clearHighlights();
-			clearBtn.style.display = 'none';
-			return;
-		}
-
-		// Restore original HTML first
-		contentArea.innerHTML = originalHTML;
-		
-		clearBtn.style.display = 'inline-block';
-		const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-		const regex = new RegExp(escapedTerm, 'gi');
-
-		// Simple innerHTML replace with HTML escaping
-		let html = originalHTML;
-		let matchCount = 0;
-		
-		html = html.replace(regex, (match) => {
-			matchCount++;
-			return `<span class="search-highlight">${match}</span>`;
-		});
-
-		contentArea.innerHTML = html;
-		
-		if (matchCount > 0) {
-			console.log(`Se encontraron ${matchCount} coincidencia${matchCount !== 1 ? 's' : ''}`);
-		}
-	}
-
-	// Debounced search
-	function debouncedSearch(searchTerm) {
-		if (debounceTimer) {
-			clearTimeout(debounceTimer);
-		}
-		debounceTimer = setTimeout(() => {
-			highlightMatches(searchTerm);
-		}, 200);
-	}
-
-	// Event listeners
-	searchInput.addEventListener('input', function() {
-		debouncedSearch(this.value);
-	});
-
-	clearBtn.addEventListener('click', function(e) {
-		e.preventDefault();
-		searchInput.value = '';
-		clearHighlights();
-		clearBtn.style.display = 'none';
-		if (debounceTimer) {
-			clearTimeout(debounceTimer);
-		}
-		searchInput.focus();
-	});
-
-	// Prevent form submission
-	document.getElementById('page-search-form').addEventListener('submit', function(e) {
-		e.preventDefault();
-	});
-})();
-</script>
 
 
 <script type='text/javascript' id='wpo_min-footer-0-js-extra'>
