@@ -368,23 +368,7 @@ Menu
 
 				<div class="header-action-container">
 					
-										<div class="search-wrap">
-						<div class="search-icon">
-							<i class="fa fa-search"></i>
-						</div>
-						<div class="search-box">
-							
-<form role="search" method="get" class="searchform" action="https://www.boixaderaresortes.com/">
-	<label>
-		<span class="screen-reader-text">Buscar:</span>
-		<input type="search" class="search-field" placeholder="Buscar..." value="" name="s" />
-	</label>
-	<button type="submit" class="search-submit btn search-btn"><span class="screen-reader-text">Buscar</span><i class="fa fa-search"></i></button>
-</form>
-						</div>
-					</div>
-									</div>
-			</div>
+								</div>
 		</div>
 	</header><!-- #masthead -->
 
@@ -443,8 +427,89 @@ Menu
 				<div class="service-content-wrap">ventas@boixaderaresortes.com</div>
 					</div>
 </div>
-</div></div></div><div id="pgc-124-0-1"  class="panel-grid-cell" ><div id="panel-124-0-1-0" class="so-panel widget widget_text panel-first-child panel-last-child" data-index="3" ><h3 class="widget-title">Envíenos un mensaje</h3>			<div class="textwidget"><p>&nbsp;</p>
-<p>[contact-form-7 id=»34&#8243; title=»Formulario de Contacto 1&#8243;]</p>
+</div></div></div><div id="pgc-124-0-1"  class="panel-grid-cell" ><div id="panel-124-0-1-0" class="so-panel widget widget_text panel-first-child panel-last-child" data-index="3" ><h3 class="widget-title">Envíenos un mensaje</h3>			<div class="textwidget">
+<p><strong>Déjanos un mensaje.</strong></p>
+
+<div class="everest-forms">
+	<div class="evf-container default" id="evf-20">
+		<div class="textwidget">
+			<form id="contact-form">
+				<div class="evf-field">
+					<label for="cf-name">Nombre *</label>
+					<input type="text" id="cf-name" name="name" required>
+				</div>
+
+				<div class="evf-field">
+					<label for="cf-email">Email *</label>
+					<input type="email" id="cf-email" name="email" required>
+				</div>
+
+				<div class="evf-field">
+					<label for="cf-subject">Asunto *</label>
+					<input type="text" id="cf-subject" name="subject" required>
+				</div>
+
+				<div class="evf-field">
+					<label for="cf-message">Mensaje *</label>
+					<textarea id="cf-message" name="message" rows="6" required></textarea>
+				</div>
+
+				<input type="text" name="_gotcha" style="display:none">
+
+				<button id="contact-submit" type="submit" class="everest-forms-submit-button button evf-submit">
+					Enviar
+				</button>
+			</form>
+			<div id="form-status" style="margin-top:15px;font-weight:600;"></div>
+		</div><!-- .evf-container -->
+	</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	const form = document.getElementById("contact-form");
+	const status = document.getElementById("form-status");
+	const button = document.getElementById("contact-submit");
+
+	if (!form || !status || !button) return;
+
+	form.addEventListener("submit", async function (event) {
+		event.preventDefault();
+
+		status.textContent = "Enviando mensaje...";
+		status.style.color = "#333";
+		button.disabled = true;
+		button.textContent = "Enviando...";
+
+		try {
+			const data = new FormData(form);
+
+			const response = await fetch("https://formspree.io/f/xqenzzqz", {
+				method: "POST",
+				body: data,
+				headers: {
+					"Accept": "application/json"
+				}
+			});
+
+			if (response.ok) {
+				status.textContent = "Gracias por su mensaje. Le responderemos pronto.";
+				status.style.color = "green";
+				form.reset();
+			} else {
+				status.textContent = "Hubo un error al enviar el mensaje.";
+				status.style.color = "red";
+			}
+		} catch (error) {
+			status.textContent = "Hubo un error de conexión. Intente nuevamente.";
+			status.style.color = "red";
+		}
+
+		button.disabled = false;
+		button.textContent = "Enviar";
+	});
+});
+</script>
 </div>
 		</div></div><div id="pgc-124-0-2"  class="panel-grid-cell" ><div id="panel-124-0-2-0" class="so-panel widget widget_text panel-first-child" data-index="4" ><h3 class="widget-title">Donde estamos?</h3>			<div class="textwidget"></div>
 		</div><div id="panel-124-0-2-1" class="so-panel widget widget_googlemapswidget google-maps-widget panel-last-child" data-index="5"><div class="flash_inherit_color panel-widget-style panel-widget-style-for-124-0-2-1"><p>Haga click sobre el marcador <font style="color:red;font-weight:bold"> "A" </font> para abrir el mapa interactivo.  Para cerrarlo haga click fuera del mapa.</p>
